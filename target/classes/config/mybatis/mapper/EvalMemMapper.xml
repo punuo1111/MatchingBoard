@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.multi.mapper.EvalMemMapper">
+    <select id="listUser" resultType="com.multi.model.UserVO">
+    	select userid from member
+	</select>
+    
+    <insert id="insertManners" parameterType="com.multi.model.MemberEvalVO">
+        insert into membereval
+        values(membereval_seq.nextval, #{whoid}, #{userid}, #{eval})
+    </insert>
+
+    <select id="memManners" parameterType="com.multi.model.UserVO" resultType="com.multi.model.MemberEvalVO">
+        select avg(manner) manner from membereval where userid=#{userid}
+    </select>
+</mapper>

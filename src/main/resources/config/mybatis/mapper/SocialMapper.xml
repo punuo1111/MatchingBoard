@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.multi.mapper.SocialMapper">
+	<insert id="insertSnsLogin" parameterType="map">
+        INSERT INTO social (userid, type, identifier, refreshtoken)
+        VALUES(#{userid}, #{type}, #{identifier}, #{refreshToken})
+    </insert>
+    
+    <select id="findSnsLoginByidentifier" parameterType="String" resultType="SnsLogin">
+    	SELECT * FROM Social WHERE identifier=#{identifier}
+	</select>
+    
+    
+</mapper>

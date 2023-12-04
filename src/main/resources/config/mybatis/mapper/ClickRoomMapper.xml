@@ -1,0 +1,12 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.multi.mapper.ClickRoomMapper">   
+
+<!-- 모임방 상세 목록 -->
+
+<select id="clickRoom" resultType="Room" parameterType="string">
+	select * from room where roomid=#{roomid}
+</select>
+    
+</mapper>

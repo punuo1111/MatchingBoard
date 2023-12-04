@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.multi.mapper.RoomMapper">
+	
+	<insert id="insertRoom" parameterType="Room">
+    	insert into room(roomid, cheif, rname, rplace, rmaxpeople, rgenre, rgame, rstr, rdatetime)
+    	values (#{roomid}, #{cheif}, #{rname}, #{rplace}, #{rmaxpeople}, #{rgenre}, #{rgame}, #{rstr}, #{rdatetime})
+	</insert>
+	
+	<select id="selectRoomByIdx" resultType="Room" parameterType="string">
+		select * from room where roomid=#{value}
+	</select>
+	
+	<!-- 글 수정 -->
+    <update id="updateRoom" parameterType="Room">
+    	update room set rname=#{rname}, rplace=#{rplace}, rmaxpeople=#{rmaxpeople},
+    	rgenre=#{rgenre}, rgame=#{rgame}, rstr=#{rstr:VARCHAR}, rdatetime=#{rdatetime}
+    	<where>
+    		roomid=#{roomid}
+    	</where> 
+    </update>
+    
+    <insert id="insertIntoRoomPeople" parameterType="map">
+        INSERT INTO roompeople (roomid, userid)
+        VALUES (#{roomId}, #{userId})
+    </insert>
+    
+    <select id="countUserInRoom" resultType="int">
+        SELECT COUNT(*) FROM roompeople
+        WHERE roomid = #{roomId} AND userid = #{userId}
+    </select>
+    
+    <delete id="removeFromRoomPeople" parameterType="map">
+        DELETE FROM roompeople 
+        WHERE roomid = #{roomId} AND userid = #{userId}
+    </delete>
+    
+    <select id="selectUserIdsInRoom" resultType="string" parameterType="string">
+        SELECT userid
+        FROM roompeople
+        WHERE roomid = #{roomId}
+    </select>
+
+    
+    <!-- *****수정확인 필요***** -->
+    <select id="selectMemberAll" parameterType="java.lang.String" resultType="com.multi.model.UserVO">
+        select * from roompeople where roomid = #{roomid}
+    </select>
+    
+    <delete id="deleteRoom" parameterType="string">
+    	delete from room where roomid=#{roomid}
+    </delete>
+	
+</mapper>

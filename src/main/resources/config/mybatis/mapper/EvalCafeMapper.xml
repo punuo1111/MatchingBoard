@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.multi.mapper.EvalCafeMapper">
+	<insert id="insertStars" parameterType="com.multi.model.ShopVO">
+		insert into evaluation 
+		values (evaluation_seq.nextval,#{userid}, #{saddr}, #{stars})
+	</insert>
+	
+	<select id="cafeStars" parameterType="com.multi.model.ShopVO" resultType="com.multi.model.EvaluationVO">
+		select avg(stars) stars from evaluation where saddr=#{saddr}
+	</select>
+    
+</mapper>

@@ -1,0 +1,70 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.multi.mapper.GameMapper">
+
+	<sql id="game_columns">
+		name, minPeople, maxpeople, playtime, age, pubYear, dlevel, genre, explane, youtube_link, namu_link, shop_link, gimage
+	</sql>
+
+	<select id="getAllGameNames" resultType="String">
+        SELECT name FROM Game
+    </select>
+    
+    <select id="getAllGame" resultType="Game">
+    	select
+    	<include refid="game_columns"/>
+    	from game order by name
+    </select>
+
+	<select id="getFindGameTitle" resultType="Game" parameterType="string">
+    	select
+    	<include refid="game_columns"/>
+    	from game
+    	<where>
+    		name like '%'||#{value}||'%'
+    	</where>
+    	order by name
+    </select>
+
+	<select id="getFindGamePlaytime" resultType="Game" parameterType="_int">
+    	select
+    	<include refid="game_columns"/>
+    	from game
+    	<![CDATA[ 
+    	where playtime <= #{value}
+		]]>
+    	order by playtime desc, name
+    </select>
+
+	<select id="getFindGameNum" resultType="Game" parameterType="_int">
+    	select
+    	<include refid="game_columns"/>
+    	from game
+    	<![CDATA[ 
+    	where minpeople <= #{value} and maxpeople >= #{value}
+		]]>
+    	order by maxpeople desc, minpeople, name
+    </select>
+
+	<select id="getFindGameAge" resultType="Game" parameterType="_int">
+    	select
+    	<include refid="game_columns"/>
+    	from game
+    	<![CDATA[ 
+    	where age <= #{value}
+		]]>
+    	order by age desc, name
+    </select>
+    
+    <select id="getGameListByGenre" resultType="Game" parameterType="string">
+    	select
+    	<include refid="game_columns"/>
+    	from game
+    	<where>
+    		genre like '%'||#{value}||'%'
+    	</where>
+    	order by name
+    </select>
+    
+</mapper>

@@ -1,0 +1,100 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.multi.mapper.BoardSearchMapper">
+
+	<!-- 모임방 목록/ 방이름, 방설명, 장르, 장소 -->
+	<select id="getList" resultType="Room" parameterType="string">
+		select rname, rstr, rgenre ,rplace
+		from room
+	</select>
+
+	<!-- 모임방 목록 - 페이징 구현 / -->
+		<select id="getListPaging" resultType="Room">   
+    <![CDATA[
+          
+        select rownum rnum, roomid, rname, rplace, rmaxpeople, rgenre, rgame, rstr, rdatetime
+        from(      
+                select /*+INDEX_DESC(room room_pk) */ rownum  as rnum,roomid, rname, rplace, rmaxpeople, rgenre, rgame, rstr, rdatetime             
+                from room 
+                where rownum <= #{pageNum} * #{amount} 
+        ]]>
+	 	<if test="keyword != null">
+	 		<include refid="search_type"></include>
+	  	</if>   
+      			        			  	 
+        <![CDATA[ 
+      				  )
+        where rnum > (#{pageNum} -1) * #{amount}
+   		 ]]>  
+	</select>
+
+	<select id="getUserWishList" resultType="string" parameterType="string">
+		select roomid from wishlist where userid=#{value}
+	</select>
+
+	<!-- 모임방 총 갯수 -->
+	<select id="getTotal" resultType="int">
+
+		select count(*) from room
+		
+		 <if test="keyword != null">        
+            where 1=1 <include refid="search_type"></include>      
+        </if>
+
+	</select>
+	
+	
+	<!-- 검색 조건문 -->
+	 <sql id="search_type">
+        <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+            <foreach collection="typeArr" item="type">
+                <trim prefix="OR">
+                    <choose>
+                    <!-- T: 모임방 제목 -->
+                        <when test="type == 'T'.toString()">
+                            rname like '%'||#{keyword}||'%' 
+                        </when>
+                    <!-- P: 모임방 장소 -->
+                        <when test="type == 'P'.toString()">
+                            rplace like '%'||#{keyword}||'%' 
+                        </when>
+                    <!-- S: 모임방 설명 -->    
+                        <when test="type == 'S'.toString()">
+                            rstr like '%'||#{keyword}||'%' 
+                        </when>                       
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    
+    </sql>
+	
+
+
+
+
+
+
+	<!-- ========================================= -->
+
+	<!-- 해당 유저의 좋아요 여부 검색하기 -->
+	<select id="likecount" resultType="int" parameterType="WishList"> 
+	select count(*) from wishlist where userid=#{userid} and roomid=#{roomid} 
+	</select> 
+		
+		
+	<!--해당 유저의 좋아요가 없는 경우 insert -->
+	<insert id="likeinsert" parameterType="WishList">
+	insert into wishlist(userid, roomid) 
+		values (#{userid}, #{roomid}) 
+	</insert> 
+	
+	
+	<!--해당 유저의 좋아요가 있는 경우 delete -->
+	 <delete id="likedelete" parameterType="WishList"> 
+	 delete from wishlist where 
+		userid=#{userid} and roomid=#{roomid} 		
+	</delete> 
+
+</mapper>

@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.multi.mapper.UserMapper">
+
+	<insert id="insertUser" parameterType="User">
+		insert into
+		Member(userid,nickname,grade,exp,manner,attend,late,absent)
+		values
+		(#{userid},DBMS_RANDOM.STRING('X', 10),0,0,0,0,0,0)
+	</insert>
+	
+	<select id="getUserById" resultType="User">
+    	SELECT * FROM Member WHERE userid=#{userid}
+	</select>
+	
+	<update id="modifyUser" parameterType="User">
+		update Member
+		set Profile_img=#{profile_img}, nickname=#{nickname}, area_code=#{area_code}, area_text=#{area_text}, fgenre1=#{fgenre1},fgenre2=#{fgenre2},fgenre3=#{fgenre3},
+			fgame1=#{fgame1}, fgame2=#{fgame2}, fgame3=#{fgame3}
+		where userid=#{userid}
+	</update>
+	
+	<select id="getUserSocialConnections" resultType="string">
+        SELECT type 
+        FROM social 
+        WHERE userid = #{userId}
+    </select>
+	
+	<select id="getUsersRoomIds" resultType="string">
+        SELECT roomid 
+        FROM roompeople 
+        WHERE userid = #{value}
+    </select>
+	
+</mapper>
